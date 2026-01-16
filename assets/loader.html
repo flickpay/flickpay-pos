@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root{
+      --bg: #1B1D26;
+      --surface: #3C3E4B;
+      --surface2: #5A5E6B;
+      --radius: 6px;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    img.logo {
+      max-width: 60vw;
+      max-height: 60vh;
+      width: auto;
+      height: auto;
+    }
+
+    /* ===== Top-left version badge ===== */
+    .versionBadge {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.85);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Bigger + slightly higher bottom-center loader */
+    .loader {
+      position: fixed;
+      left: 50%;
+      bottom: 90px; /* was 26px */
+      transform: translateX(-50%);
+      width: 56px;  /* was 34px */
+      height: 56px; /* was 34px */
+      border-radius: 50%;
+
+      border: 5px solid rgba(255,255,255,0.16);
+      border-top-color: rgba(255,255,255,0.90);
+      border-right-color: rgba(255,255,255,0.45);
+
+      animation: spin 0.9s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes spin {
+      from { transform: translateX(-50%) rotate(0deg); }
+      to   { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    @media (max-height: 500px) {
+      .loader {
+        bottom: 50px;
+        width: 44px;
+        height: 44px;
+        border-width: 4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="versionBadge" id="versionBadge">v...</div>
+
+  <img class="logo" src="default.png" alt="FlickpayPOS" />
+  <div class="loader" aria-label="Loading" role="status"></div>
+
+  <script>
+    (async function () {
+      try {
+        if (!window.flickpayConfig?.getAppVersion) return;
+        const v = await window.flickpayConfig.getAppVersion();
+        const el = document.getElementById("versionBadge");
+        if (el) el.textContent = `v${v}`;
+      } catch {
+        // ignore
+      }
+    })();
+  </script>
+</body>
+</html>
